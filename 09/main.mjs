@@ -19,12 +19,27 @@ fillData('input.txt')
     const preambleSize = 25;
     for (let i=preambleSize; i<data.length; i++) {
         const currentValue = data[i];
-        const preamble = data.slice(i-preambleSize, i);
+        const preamble = data.slice(i-preambleSize, i).filter(val => val < currentValue);
+        preamble.sort((a, b) => a-b);
 
         let found = false;
-        for(let min=0; min<preamble.length && !found; min++){
-            for(let max=0; max < preamble.length && !found; max++) {
-                found = min != max && preamble[min] + preamble[max] === currentValue;
+        let min = 0;
+        let max = preamble.length - 1;
+
+        // since the preamble is sorted, sum the max and the min value.
+        // if sum is lower than current value, increase minIndex try again with a greater min value
+        // if sum is greater than current value, decrease maxIndex try again with a lower max value
+        // otherwise the sum is equal to the current value, so skip this current value and check next in data
+        while(!found && min < max) {
+            const sum = preamble[min] + preamble[max];
+            if (sum < currentValue) {
+                min += 1;
+            }
+            else if (sum > currentValue) {
+                max -= 1;
+            }
+            else {
+                found = true;
             }
         }
 
@@ -38,6 +53,7 @@ fillData('input.txt')
 
     let i=0;
     const values = [];
+
     while(i<data.length && !found) {
         const sum = values.reduce((sum, val) => sum + val, 0);
         if (sum > notSum) {
