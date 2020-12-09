@@ -19,7 +19,10 @@ fillData('input.txt')
     const preambleSize = 25;
     for (let i=preambleSize; i<data.length; i++) {
         const currentValue = data[i];
+        // given the 25 elements before the current value, remove the values greater than current value because
+        // they can't be useful for the sum
         const preamble = data.slice(i-preambleSize, i).filter(val => val < currentValue);
+        // sort the array in a numerical way
         preamble.sort((a, b) => a-b);
 
         let found = false;
@@ -27,8 +30,8 @@ fillData('input.txt')
         let max = preamble.length - 1;
 
         // since the preamble is sorted, sum the max and the min value.
-        // if sum is lower than current value, increase minIndex try again with a greater min value
-        // if sum is greater than current value, decrease maxIndex try again with a lower max value
+        // if sum is lower than current value, increase minIndex than try again with a greater min value
+        // if sum is greater than current value, decrease maxIndex than try again with a lower max value
         // otherwise the sum is equal to the current value, so skip this current value and check next in data
         while(!found && min < max) {
             const sum = preamble[min] + preamble[max];
