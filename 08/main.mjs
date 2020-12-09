@@ -49,15 +49,15 @@ fillData('input.txt')
                     i += 1;
                     break;
                 case 'jmp':  
-                    if(!jmpAndNopIndexes.includes(i)) {
-                        jmpAndNopIndexes.unshift(i);
+                    if(firstLoop && !jmpAndNopIndexes.includes(i)) {
+                        jmpAndNopIndexes.push(i);
                         j += 1;
                     }
                     i += tryInstructions[i].value;
                     break;
                 case 'nop':
-                    if(!jmpAndNopIndexes.includes(i)) {
-                        jmpAndNopIndexes.unshift(i);
+                    if(firstLoop&& !jmpAndNopIndexes.includes(i)) {
+                        jmpAndNopIndexes.push(i);
                         j += 1;
                     }
                     i += 1;
@@ -67,7 +67,9 @@ fillData('input.txt')
                     break;
             }
         }
+
         firstLoop = false;
+        
         j -= 1;
     }
 
