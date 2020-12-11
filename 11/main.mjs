@@ -18,7 +18,7 @@ const fillData = (file) => {
 }
 
 // return the number of adjacent seats occupied around current one, with a range limit to look around equals to limit param.
-// if no limit is given, than there is no range, and adjacent could be any seat visible
+// if no limit is given, than there is no range, and adjacent could be any visible seat
 const getAdjacentOccupiedSeats = (fromData, currentCol, currentRow, limit) => {
     // save the visible seat for every direction
     let adjacent = {
@@ -32,7 +32,7 @@ const getAdjacentOccupiedSeats = (fromData, currentCol, currentRow, limit) => {
         downRight: undefined
     };
 
-    // look around at most for limit seats around current
+    // look around at most for limit seats next to current
     // if limit is undefined, it is equal to the max dimension between rows and column
     if (limit == null) {
         limit = Math.max(fromData.length, fromData[currentRow].length);
@@ -49,17 +49,17 @@ const getAdjacentOccupiedSeats = (fromData, currentCol, currentRow, limit) => {
         }
         // check elements above
         if (currentRow - i >= 0) {
-            // directly above
+            // directly above, if not already found
             if (adjacent.up === undefined && fromData[currentRow-i][currentCol] !== '.') {
                 adjacent = {...adjacent, up: fromData[currentRow-i][currentCol]};
             }
             
-            // diagonally to left
+            // diagonally to left, if not already found
             if (adjacent.upLeft === undefined && currentCol-i>=0 && fromData[currentRow-i][currentCol-i] !== '.') {
                 adjacent = {...adjacent, upLeft: fromData[currentRow-i][currentCol-i]};
             }
             
-            // diagonally to right
+            // diagonally to right, if not already found
             if (adjacent.upRight === undefined && currentCol+i<fromData[currentRow-i].length && fromData[currentRow-i][currentCol+i] !== '.') {
                 adjacent = {...adjacent, upRight: fromData[currentRow-i][currentCol+i]};
             }
@@ -67,17 +67,17 @@ const getAdjacentOccupiedSeats = (fromData, currentCol, currentRow, limit) => {
 
         // check elements under
         if (currentRow + i < fromData.length) {
-            // directly under
+            // directly under, if not already found
             if (adjacent.down === undefined && fromData[currentRow+i][currentCol] !== '.') {
                 adjacent = {...adjacent, down: fromData[currentRow+i][currentCol]};
             }
             
-            // diagonally to left
+            // diagonally to left, if not already found
             if (adjacent.downLeft === undefined && currentCol-i>=0 && fromData[currentRow+i][currentCol-i] !== '.') {
                 adjacent = {...adjacent, downLeft: fromData[currentRow+i][currentCol-i]};
             }
             
-            // diagonally to right
+            // diagonally to right, if not already found
             if (adjacent.downRight === undefined && currentCol+i<fromData[currentRow+i].length && fromData[currentRow+i][currentCol+i] !== '.') {
                 adjacent = {...adjacent, downRight: fromData[currentRow+i][currentCol+i]};
             }
@@ -88,7 +88,7 @@ const getAdjacentOccupiedSeats = (fromData, currentCol, currentRow, limit) => {
     
 }
 
-const movePeople = (data, occupiedToFreeLimit, rangeLimit) => {
+const movePeople = (data, occupiedToEmptyLimit, rangeLimit) => {
     let stable = false;
     let firstRound = true;
     let i=0;
@@ -97,7 +97,7 @@ const movePeople = (data, occupiedToFreeLimit, rangeLimit) => {
         
         for(let i=0; i<data.length; i++) {
             for(let j=0; j<data[i].length; j++) {
-                // for every seat in the line, put in the array adjacent all the 8 adjacent seats
+                // retrieve the number of occupied seats near the current
                 const adjacent = getAdjacentOccupiedSeats(prevData, j, i, rangeLimit);
 
                 if (prevData[i][j] === 'L') {
@@ -107,8 +107,9 @@ const movePeople = (data, occupiedToFreeLimit, rangeLimit) => {
                     }
                 }
                 else if (prevData[i][j] === '#') {
-                    // if the seat is occupied and four or more seats adjacent to it are occupied, the seat becomes empty
-                    if (adjacent >= occupiedToFreeLimit) {
+                    // if the seat is occupied and the occupiedToEmptyLimit or more seats adjacent to it are occupied, the seat becomes empty.
+                    // occupiedToEmptyLimit is the lowest number of occupied adjacent seat that cause an occupied seat to become empty
+                    if (adjacent >= occupiedToEmptyLimit) {
                         data[i] = data[i].replaceAt(j,'L');
                     }
                 }
@@ -129,7 +130,6 @@ fillData('input.txt')
 .then(data => {
     const totOccupiedSeats1 = movePeople([...data], 4, 1);
     const totOccupiedSeats2 = movePeople([...data], 5);
-
 
     console.log(totOccupiedSeats1, totOccupiedSeats2);
 })
