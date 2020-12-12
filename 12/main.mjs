@@ -126,7 +126,7 @@ function moveShip2 (data) {
         else if (el.action === 'R') {
             if (el.value === 90) {
                 // reverse coordinates and then change sign to y
-                waypoint = {x: waypoint.y, y: -waypoint.x};  
+                waypoint = {x: waypoint.y, y: waypoint.x * (-1)};  
             }
             else if (el.value === 180) {
                 // just change sign
@@ -135,13 +135,13 @@ function moveShip2 (data) {
             }
             else if (el.value === 270) {
                 // reverse coordinates and then change sign
-                waypoint = {x: -waypoint.y, y: waypoint.x};
+                waypoint = {x: waypoint.y * (-1), y: waypoint.x};
             }
         }
         else if (el.action === 'L') { 
             if (el.value === 90) {
                 // reverse coordinates and then change sign
-                waypoint = {x: -waypoint.y, y: waypoint.x};
+                waypoint = {x: waypoint.y * (-1), y: waypoint.x};
             }
             else if (el.value === 180) {
                 // just change sign
@@ -150,7 +150,7 @@ function moveShip2 (data) {
             }
             else if (el.value === 270) {
                 // reverse coordinates and then change sign
-                waypoint = {x: waypoint.y, y: -waypoint.x};
+                waypoint = {x: waypoint.y, y: waypoint.x * (-1)};
             }
         }
         // F moves the ship
