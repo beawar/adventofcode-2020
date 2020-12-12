@@ -13,8 +13,7 @@ function fillData(file) {
     });
 }
 
-fillData('input.txt')
-.then(data => {
+function moveShip1 (data) {
     // coordinates contains current position in the cartesian system
     const coordinates = {x: 0, y: 0};
     // starting direction is east
@@ -97,10 +96,82 @@ fillData('input.txt')
         if (currentMoving) {
             coordinates[currentMoveAxis] = coordinates[currentMoveAxis] + (currentMoveAxisDirection * el.value);
         }
-        //console.log(el, coordinates);
     }
 
     console.log(coordinates.x, coordinates.y, Math.abs(coordinates.x) + Math.abs(coordinates.y));
 
+}
+
+
+function moveShip2 (data) {
+    // coordinates contains current position of the ship in the cartesian system
+    const coordinates = {x: 0, y: 0};
+    // waypoint contains the coordinate of the waypoint
+    let waypoint = {x: 10, y: 1};
+    for (let el of data) {
+        // N, S, E, W move only the waypoint
+        if (el.action === 'N') {
+            waypoint.y += el.value;
+        }
+        else if (el.action === 'S') {
+            waypoint.y -= el.value;
+        }
+        if (el.action === 'E') {
+            waypoint.x += el.value;
+        }
+        else if (el.action === 'W') {
+            waypoint.x -= el.value;
+        }
+        // R and L shift the waypoint around the cartesian system
+        else if (el.action === 'R') {
+            if (el.value === 90) {
+                // reverse coordinates and then change sign to y
+                waypoint = {x: waypoint.y, y: waypoint.x};
+                waypoint.y *= -1;   
+            }
+            else if (el.value === 180) {
+                // just change sign
+                waypoint.x *= -1;
+                waypoint.y *= -1;
+            }
+            else if (el.value === 270) {
+                // reverse coordinates and then change sign
+                waypoint = {x: waypoint.y, y: waypoint.x};
+                waypoint.x *= -1;
+            }
+        }
+        else if (el.action === 'L') { 
+            if (el.value === 90) {
+                // reverse coordinates and then change sign
+                waypoint = {x: waypoint.y, y: waypoint.x};
+                waypoint.x *= -1;
+            }
+            else if (el.value === 180) {
+                // just change sign
+                waypoint.x *= -1;
+                waypoint.y *= -1;
+            }
+            else if (el.value === 270) {
+                // reverse coordinates and then change sign
+                waypoint = {x: waypoint.y, y: waypoint.x};
+                waypoint.y *= -1;
+            }
+        }
+        // F moves the ship
+        else if (el.action === 'F') {
+            coordinates.x += el.value * waypoint.x;
+            coordinates.y += el.value * waypoint.y;
+        }
+    }
+
+    console.log(coordinates.x, coordinates.y, Math.abs(coordinates.x) + Math.abs(coordinates.y));
+
+}
+
+
+fillData('input.txt')
+.then(data => {
+    moveShip1(data);
+    moveShip2(data);
 })
 .catch(err => console.log(err));
