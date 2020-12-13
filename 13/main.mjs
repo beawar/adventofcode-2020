@@ -78,7 +78,7 @@ function part2(data) {
 
 fillData('input.txt')
 .then(data => {
-    //part1(data);
+    part1(data);
     part2(data);
 })
 .catch(err => console.error(err));
