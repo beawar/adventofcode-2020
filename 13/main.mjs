@@ -42,27 +42,43 @@ function part1(data) {
 function part2(data) {
     // in part 2 I care about bus ids only
     const busArray = data[1].split(',');
-    let earliestTimestamp = 100000000000000;
+    
     let found = false;
+    const busArraySorted = busArray.map((el,index) => {
+        return {
+            id: (isNaN(el) ? 0 : parseInt(el)),
+            offset: index
+        };
+    })
+    .filter(el => el.id > 0)
+    .sort((a, b) => b.id - a.id);
+    
+    let timestamp = Math.floor(100000000000000/busArraySorted[0].id)*busArraySorted[0].id;
+    console.log('Start from:', timestamp);
+
     while (!found) {
-        earliestTimestamp += parseInt(busArray[0]);
+        timestamp += busArraySorted[0].id;
         let allOffsetsOk = true;
-        for (let i=1; i<busArray.length && allOffsetsOk; i++) {
-            if (busArray[i] !== 'x') {
-                const timestampWithOffset = earliestTimestamp + i;
-                const busArrival = timestampWithOffset / parseInt(busArray[i]);
-                allOffsetsOk = busArrival % 1 === 0;
+        if(timestamp % 1000000000 === 0) {
+            console.log(timestamp);
+        }
+       
+        for (let i=1; i<busArraySorted.length && allOffsetsOk; i++) {
+            const timestampWithOffset = timestamp - busArraySorted[0].offset + busArraySorted[i].offset;
+            const busArrival = timestampWithOffset / busArraySorted[i].id;
+            allOffsetsOk = busArrival % 1 === 0;
+            if (allOffsetsOk) {
+                //console.log(i, busArraySorted[i].id, timestamp);
             }
         }
         found = allOffsetsOk;
-        console.log(earliestTimestamp);
     }
-    console.log(earliestTimestamp)
+    console.log('Result', timestamp-busArraySorted[0].offset);
 }
 
 fillData('input.txt')
 .then(data => {
-    part1(data);
+    //part1(data);
     part2(data);
 })
 .catch(err => console.error(err));
