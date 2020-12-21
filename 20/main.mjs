@@ -317,7 +317,7 @@ function searchMonsters(image) {
                 //console.log(imageTemp[i+1].join(''));
                 //console.log(imageTemp[i+2].join(''));
                 image = imageTemp.map(l => l.join(''));
-                break;
+                //break;
             }
             //if (j === 43) throw new 'STOP';
         }
@@ -360,7 +360,7 @@ function solvePuzzle(pieces) {
 
 }
 
-fillData('input.txt')
+fillData('input_sabri.txt')
     .then(data => {
         const dataFull = [];
         for (let tileObj of data) {
