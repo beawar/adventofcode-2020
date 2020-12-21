@@ -312,17 +312,19 @@ function searchMonsters(image) {
             }
             if (monsterMatch) {
                 monsters += 1;
-                //console.log('NEW MONSTER FOUND');
+                //console.log('NEW MONSTER FOUND', monsters);
                 //console.log(imageTemp[i].join(''));
                 //console.log(imageTemp[i+1].join(''));
                 //console.log(imageTemp[i+2].join(''));
                 image = imageTemp.map(l => l.join(''));
-                //break;
             }
-            //if (j === 43) throw new 'STOP';
         }
     }
-    return {count: monsters, image: image};
+
+    return {
+        monsters,
+        image
+    };
 }
 
 function solvePuzzle(pieces) {
@@ -330,26 +332,23 @@ function solvePuzzle(pieces) {
     let piecesToPlace = [...pieces];
     buildBorders(puzzle, piecesToPlace);
     buildCenter(puzzle, piecesToPlace);
-    //puzzle.forEach(el => console.log(el.map(obj => obj ? obj.id : 'null').join(' ')));
 
     let image = buildImage(puzzle);
 
     let monsters = 0;
     let imageWithMonsters;
-    let forceStop = 0;
-    while (monsters === 0 && forceStop <4) {
+    while (monsters === 0) {
         let res = searchMonsters(image);
-        if(res.count === 0) {
+        if(res.monsters === 0) {
             let flippedImage = flipImage(image);
-            monsters = searchMonsters(flippedImage);
+            res = searchMonsters(flippedImage);
         }
-        if (res.count === 0) {
+        if (res.monsters === 0) {
             image = rotateImage(image);
         }
 
-        monsters = res.count;
+        monsters = res.monsters;
         imageWithMonsters = res.image;
-        forceStop += 1;
     }
 
     imageWithMonsters.forEach(l => console.log(l));
