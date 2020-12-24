@@ -67,7 +67,7 @@ function part2(floor) {
         //console.log('prevFloor', prevFloor);
         for (let tile of prevFloor) {
             const blackAdjacents = prevFloor.filter(el => (el.x !== tile.x || el.y !== tile.y)
-                && (Math.abs(tile.x - el.x)) <= 2 && Math.abs(tile.y-el.y) <= 1);
+                && Math.abs(tile.x - el.x) <= 2 && Math.abs(tile.y-el.y) <= 1);
             //console.log('tile', tile);
             //console.log('blackAdjacents', blackAdjacents);
             if (blackAdjacents.length === 0 || blackAdjacents.length > 2) {
@@ -90,7 +90,7 @@ function part2(floor) {
             for (let whiteTile of whiteAdjacents) {
                 //console.log('whiteTile', whiteTile);
                 const whiteBlackAdjacents = prevFloor.filter(el => (el.x !== whiteTile.x || el.y !== whiteTile.y)
-                && (Math.abs(whiteTile.x - el.x)) <= 2 && Math.abs(whiteTile.y-el.y) <= 1);
+                && Math.abs(whiteTile.x - el.x) <= 2 && Math.abs(whiteTile.y-el.y) <= 1);
                 //console.log('whiteBlackAdjacents', whiteBlackAdjacents);
                 if (whiteBlackAdjacents.length === 2) {
                     // add it to floor if not already added from a previous tile inspection
